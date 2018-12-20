@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-const eventRouter = express.Router();
+const router = express.Router();
 
 const { logInfo, logError, logSuccess } = require('./logger.js');
 const { Event } = require('./models.js');
@@ -10,7 +10,7 @@ const { filterObject, checkObjectProperties } = require('./helpers.js');
 const jwtPassportMiddleware = passport.authenticate('jwt', { session: false });
 
 // ### Create ###
-eventRouter.post('/', jwtPassportMiddleware, (request, response) => {
+router.post('/', jwtPassportMiddleware, (request, response) => {
   // Checks for required fields inside request body. If any are missing, responds with an error.
   const fieldsNotFound = checkObjectProperties(
     ['eventTitle', 'targetDate'],
@@ -46,7 +46,7 @@ eventRouter.post('/', jwtPassportMiddleware, (request, response) => {
 });
 
 // ### Read ###
-eventRouter.get('/', jwtPassportMiddleware, (request, response) => {
+router.get('/', jwtPassportMiddleware, (request, response) => {
   logInfo('Fetching previous responses ...');
   Event.find({ user: request.user._id })
     .then(events => {
@@ -62,7 +62,7 @@ eventRouter.get('/', jwtPassportMiddleware, (request, response) => {
 });
 
 // ### Update ###
-eventRouter.put('/:id', jwtPassportMiddleware, (request, response) => {
+router.put('/:id', jwtPassportMiddleware, (request, response) => {
   // Checks for required fields inside request body. If any are missing, responds with an error.
   const fieldsNotFound = checkObjectProperties(
     ['eventTitle', 'targetDate'],
@@ -102,7 +102,7 @@ eventRouter.put('/:id', jwtPassportMiddleware, (request, response) => {
 });
 
 // ### Delete ###
-eventRouter.delete('/:id', jwtPassportMiddleware, (request, response) => {
+router.delete('/:id', jwtPassportMiddleware, (request, response) => {
   logInfo('Deleting response document ...');
   Event.findByIdAndRemove(request.params.id)
     .then(() => {
@@ -117,4 +117,4 @@ eventRouter.delete('/:id', jwtPassportMiddleware, (request, response) => {
     });
 });
 
-module.exports = { eventRouter };
+module.exports = { router };

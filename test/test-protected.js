@@ -42,11 +42,11 @@ describe('Protected endpoint', function() {
     return User.remove({});
   });
 
-  describe('/api/protected', function() {
+  describe('/api/dashboard', function() {
     it('Should reject requests with no credentials', function() {
       return chai
         .request(app)
-        .get('/api/protected')
+        .get('/api/dashboard')
         .then(() => expect.fail(null, null, 'Request should not succeed'))
         .catch(err => {
           if (err instanceof chai.AssertionError) {
@@ -74,7 +74,7 @@ describe('Protected endpoint', function() {
 
       return chai
         .request(app)
-        .get('/api/protected')
+        .get('/api/dashboard')
         .set('Authorization', `Bearer ${token}`)
         .then(() => expect.fail(null, null, 'Request should not succeed'))
         .catch(err => {
@@ -105,7 +105,7 @@ describe('Protected endpoint', function() {
 
       return chai
         .request(app)
-        .get('/api/protected')
+        .get('/api/dashboard')
         .set('authorization', `Bearer ${token}`)
         .then(() => expect.fail(null, null, 'Request should not succeed'))
         .catch(err => {
@@ -117,7 +117,7 @@ describe('Protected endpoint', function() {
           expect(res).to.have.status(401);
         });
     });
-    it('Should send protected data', function() {
+    it('Should send dashboard data', function() {
       const token = jwt.sign(
         {
           user: {
@@ -136,7 +136,7 @@ describe('Protected endpoint', function() {
 
       return chai
         .request(app)
-        .get('/api/protected')
+        .get('/api/dashboard')
         .set('authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(200);
