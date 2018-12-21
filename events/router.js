@@ -1,17 +1,16 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
+const { filterObject, checkObjectProperties } = require('../auth/helpers');
+const { logInfo, logError, logSuccess } = require('../auth/logger');
+const { Event } = require('./models');
+const { HTTP_STATUS_CODES } = require('../config');
 
-const { logInfo, logError, logSuccess } = require('./logger.js');
-const { Event } = require('./models.js');
-const { HTTP_STATUS_CODES } = require('./config.js');
-const { filterObject, checkObjectProperties } = require('./helpers.js');
-
-const jwtPassportMiddleware = passport.authenticate('jwt', { session: false });
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 // ### Create ###
-router.post('/', jwtPassportMiddleware, (request, response) => {
-  // Checks for required fields inside request body. If any are missing, responds with an error.
+router.post('/', jwtAuth, (request, response) => {
+  // Checks for required fields
   const fieldsNotFound = checkObjectProperties(
     ['eventTitle', 'targetDate'],
     request.body
@@ -31,7 +30,7 @@ router.post('/', jwtPassportMiddleware, (request, response) => {
     user: request.user._id,
     eventTitle: request.body.eventTitle,
     targetDate: request.body.targetDate,
-    notes: request.body.notes
+    eventNotes: request.body.eventNotes
   })
     .then(event => {
       logSuccess('New response document created');
@@ -46,7 +45,7 @@ router.post('/', jwtPassportMiddleware, (request, response) => {
 });
 
 // ### Read ###
-router.get('/', jwtPassportMiddleware, (request, response) => {
+router.get('/', jwtAuth, (request, response) => {
   logInfo('Fetching previous responses ...');
   Event.find({ user: request.user._id })
     .then(events => {
@@ -62,8 +61,8 @@ router.get('/', jwtPassportMiddleware, (request, response) => {
 });
 
 // ### Update ###
-router.put('/:id', jwtPassportMiddleware, (request, response) => {
-  // Checks for required fields inside request body. If any are missing, responds with an error.
+router.put('/:id', jwtAuth, (request, response) => {
+  // Checks for required fields
   const fieldsNotFound = checkObjectProperties(
     ['eventTitle', 'targetDate'],
     request.body
@@ -102,7 +101,7 @@ router.put('/:id', jwtPassportMiddleware, (request, response) => {
 });
 
 // ### Delete ###
-router.delete('/:id', jwtPassportMiddleware, (request, response) => {
+router.delete('/:id', jwtAuth, (request, response) => {
   logInfo('Deleting response document ...');
   Event.findByIdAndRemove(request.params.id)
     .then(() => {

@@ -12,9 +12,9 @@ eventSchema.methods.serialize = function() {
   return {
     id: this._id,
     user: this.user,
-    eventTitle: this.title,
+    eventTitle: this.eventTitle,
     targetDate: this.targetDate,
-    eventNotes: this.notes
+    eventNotes: this.eventNotes
   };
 };
 
