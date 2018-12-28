@@ -44,13 +44,29 @@ router.post('/', jwtAuth, (request, response) => {
     });
 });
 
-// ### Read ###
+// ### Get ###
 router.get('/', jwtAuth, (request, response) => {
-  logInfo('Fetching previous responses ...');
+  logInfo('Fetching events ...');
   Event.find({ user: request.user._id })
     .then(events => {
-      logSuccess('Response collection fetched succesfully');
+      logSuccess('Events collection fetched succesfully');
       response.json(events.map(event => event.serialize()));
+    })
+    .catch(err => {
+      logError(err);
+      response
+        .status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR)
+        .json({ error: 'Internal server error' });
+    });
+});
+
+// ### GetbyId ###
+router.get('/:id', jwtAuth, (request, response) => {
+  logInfo('Fetching a specific event');
+  Event.findById(request.params.id)
+    .then(event => {
+      logSuccess(`Event with the id: ${request.params.id} fetched succesfully`);
+      response.json(event.serialize());
     })
     .catch(err => {
       logError(err);
@@ -90,7 +106,7 @@ router.put('/:id', jwtAuth, (request, response) => {
   )
     .then(() => {
       logSuccess('Response document updated succesfully');
-      return response.status(HTTP_STATUS_CODES.NO_CONTENT).end();
+      return response.status(HTTP_STATUS_CODES.ACCEPTED).end();
     })
     .catch(err => {
       logError(err);
@@ -106,7 +122,7 @@ router.delete('/:id', jwtAuth, (request, response) => {
   Event.findByIdAndRemove(request.params.id)
     .then(() => {
       logSuccess('Deleted response document succesfully');
-      response.status(HTTP_STATUS_CODES.NO_CONTENT).end();
+      response.status(HTTP_STATUS_CODES.ACCEPTED).end();
     })
     .catch(err => {
       logError(err);
