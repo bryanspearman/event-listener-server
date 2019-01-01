@@ -3,7 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 const { filterObject, checkObjectProperties } = require('../auth/helpers');
 const { logInfo, logError, logSuccess } = require('../auth/logger');
-const { Event } = require('./models');
+const { Item } = require('./models');
 const { HTTP_STATUS_CODES } = require('../config');
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
@@ -12,7 +12,7 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 router.post('/', jwtAuth, (request, response) => {
   // Checks for required fields
   const fieldsNotFound = checkObjectProperties(
-    ['eventTitle', 'targetDate'],
+    ['itemTitle', 'itemDate'],
     request.body
   );
   if (fieldsNotFound.length > 0) {
@@ -26,15 +26,15 @@ router.post('/', jwtAuth, (request, response) => {
   }
 
   logInfo('Creating your response document ...');
-  Event.create({
+  Item.create({
     user: request.user._id,
-    eventTitle: request.body.eventTitle,
-    targetDate: request.body.targetDate,
-    eventNotes: request.body.eventNotes
+    itemTitle: request.body.itemTitle,
+    itemDate: request.body.itemDate,
+    itemNotes: request.body.itemNotes
   })
-    .then(event => {
+    .then(item => {
       logSuccess('New response document created');
-      return response.status(HTTP_STATUS_CODES.CREATED).json(event.serialize());
+      return response.status(HTTP_STATUS_CODES.CREATED).json(item.serialize());
     })
     .catch(err => {
       logError(err);
@@ -46,11 +46,11 @@ router.post('/', jwtAuth, (request, response) => {
 
 // ### Get ###
 router.get('/', jwtAuth, (request, response) => {
-  logInfo('Fetching events ...');
-  Event.find({ user: request.user._id })
-    .then(events => {
-      logSuccess('Events collection fetched succesfully');
-      response.json(events.map(event => event.serialize()));
+  logInfo('Fetching items ...');
+  Item.find({ user: request.user._id })
+    .then(items => {
+      logSuccess('List of items fetched succesfully');
+      response.json(items.map(item => item.serialize()));
     })
     .catch(err => {
       logError(err);
@@ -62,11 +62,13 @@ router.get('/', jwtAuth, (request, response) => {
 
 // ### GetbyId ###
 router.get('/:id', jwtAuth, (request, response) => {
-  logInfo('Fetching a specific event');
-  Event.findById(request.params.id)
-    .then(event => {
-      logSuccess(`Event with the id: ${request.params.id} fetched succesfully`);
-      response.json(event.serialize());
+  logInfo('Fetching a specific item');
+  Item.findById(request.params.id)
+    .then(item => {
+      logSuccess(
+        `Item requested with id: "${request.params.id}" fetched succesfully`
+      );
+      response.json(item.serialize());
     })
     .catch(err => {
       logError(err);
@@ -80,7 +82,7 @@ router.get('/:id', jwtAuth, (request, response) => {
 router.put('/:id', jwtAuth, (request, response) => {
   // Checks for required fields
   const fieldsNotFound = checkObjectProperties(
-    ['eventTitle', 'targetDate'],
+    ['itemTitle', 'itemDate'],
     request.body
   );
   if (fieldsNotFound.length > 1) {
@@ -95,17 +97,19 @@ router.put('/:id', jwtAuth, (request, response) => {
 
   logInfo('Updating response document ...');
   const fieldsToUpdate = filterObject(
-    ['eventTitle', 'targetDate', 'notes'],
+    ['itemTitle', 'itemDate', 'itemNotes'],
     request.body
   );
 
-  Event.findByIdAndUpdate(
+  Item.findByIdAndUpdate(
     request.params.id,
     { $set: fieldsToUpdate },
     { new: true }
   )
     .then(() => {
-      logSuccess('Response document updated succesfully');
+      logSuccess(
+        `Item with the id: ${request.params.id} was updated succesfully`
+      );
       return response.status(HTTP_STATUS_CODES.ACCEPTED).end();
     })
     .catch(err => {
@@ -119,7 +123,7 @@ router.put('/:id', jwtAuth, (request, response) => {
 // ### Delete ###
 router.delete('/:id', jwtAuth, (request, response) => {
   logInfo('Deleting response document ...');
-  Event.findByIdAndRemove(request.params.id)
+  Item.findByIdAndRemove(request.params.id)
     .then(() => {
       logSuccess('Deleted response document succesfully');
       response.status(HTTP_STATUS_CODES.ACCEPTED).end();

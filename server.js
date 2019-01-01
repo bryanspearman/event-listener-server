@@ -7,7 +7,7 @@ const passport = require('passport');
 const { logInfo, logError, logSuccess } = require('./auth/logger.js');
 const { PORT, DATABASE_URL, HTTP_STATUS_CODES } = require('./config');
 const { router: usersRouter } = require('./users');
-const { router: eventRouter } = require('./events');
+const { router: itemRouter } = require('./items');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 const app = express();
@@ -31,12 +31,12 @@ app.use(function(req, res, next) {
 });
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
-app.use('/api/event/', eventRouter);
+app.use('/api/items/', itemRouter);
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 //protected endpoint needs valid JWT to access
-app.get('/api/event', jwtAuth, (req, res) => {
+app.get('/api/items', jwtAuth, (req, res) => {
   res.status(HTTP_STATUS_CODES.OK).json({ data: 'Data string' });
 });
 
