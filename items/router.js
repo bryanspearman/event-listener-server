@@ -13,8 +13,9 @@ router.post('/', jwtAuth, (request, response) => {
   // Checks for required fields
   const fieldsNotFound = checkObjectProperties(
     ['itemTitle', 'itemDate'],
-    request.body
+    request.body.item
   );
+  console.log(fieldsNotFound.length);
   if (fieldsNotFound.length > 0) {
     const errorMessage = `Bad Request: Missing the following fields from the request body: ${fieldsNotFound.join(
       ', '
@@ -28,9 +29,12 @@ router.post('/', jwtAuth, (request, response) => {
   logInfo('Creating your response document ...');
   Item.create({
     user: request.user._id,
-    itemTitle: request.body.itemTitle,
-    itemDate: request.body.itemDate,
-    itemNotes: request.body.itemNotes
+    itemTitle: request.body.item.itemTitle,
+    itemDate: request.body.item.itemDate,
+    itemNotes:
+      request.body.item && request.body.item.itemNotes
+        ? request.body.item.itemNotes
+        : ''
   })
     .then(item => {
       logSuccess('New response document created');
