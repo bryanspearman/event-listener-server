@@ -20,15 +20,11 @@ app.use(express.json());
 app.use(express.static('./public'));
 
 // CORS
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT);
-  }
-  next();
-});
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN
+  })
+);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 app.use('/api/items/', itemRouter);
@@ -62,9 +58,7 @@ function runServer(databaseUrl, port = PORT) {
 
           server = app
             .listen(port, () => {
-              logSuccess(
-                `Express server listening on http://localhost:${PORT}`
-              );
+              logSuccess(`Express server listening on ${databaseUrl}:${PORT}`);
               resolve();
             })
             .on('error', err => {
