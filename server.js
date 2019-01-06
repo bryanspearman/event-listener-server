@@ -40,7 +40,9 @@ app.get('/api/items', jwtAuth, (req, res) => {
 
 // responds to unhandled routes
 app.use('*', (req, res) => {
-  res.status(HTTP_STATUS_CODES.NOT_FOUND).json({ message: 'Not Found' });
+  res
+    .status(HTTP_STATUS_CODES.NOT_FOUND)
+    .json({ message: 'This route is not available' });
 });
 
 let server;
@@ -60,7 +62,7 @@ function runServer(databaseUrl, port = PORT) {
 
           server = app
             .listen(port, () => {
-              logSuccess(`Express server listening on ${databaseUrl}:${PORT}`);
+              logSuccess(`Express server listening on PORT: ${PORT}`);
               resolve();
             })
             .on('error', err => {
