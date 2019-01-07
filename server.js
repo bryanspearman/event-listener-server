@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config();
+// require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
@@ -35,7 +35,7 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 
 //protected endpoint needs valid JWT to access
 app.get('/api/items', jwtAuth, (req, res) => {
-  res.status(HTTP_STATUS_CODES.OK).json({ data: 'Data string' });
+  res.status(HTTP_STATUS_CODES.OK).json({ item: {} });
 });
 
 // responds to unhandled routes
