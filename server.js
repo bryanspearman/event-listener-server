@@ -41,9 +41,10 @@ app.get('/api/items', jwtAuth, (req, res) => {
 
 // responds to unhandled routes
 app.use('*', (req, res) => {
-  res
-    .status(HTTP_STATUS_CODES.NOT_FOUND)
-    .json({ message: 'This route is not available' });
+  res.status(HTTP_STATUS_CODES.NOT_FOUND).json({
+    message:
+      'Wrong route. You should be here: https://event-listener-2019.herokuapp.com'
+  });
 });
 
 let server;
