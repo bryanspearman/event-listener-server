@@ -35,17 +35,6 @@ app.use('/api/items/', itemRouter);
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
-}
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-});
-
-app.post('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-});
-
 //protected endpoint needs valid JWT to access
 app.get('/api/items', jwtAuth, (req, res) => {
   res.status(HTTP_STATUS_CODES.OK).json({ item: {} });
