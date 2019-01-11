@@ -1,12 +1,12 @@
 'use strict';
-// require('dotenv').config();
+//Comment out line 3 for production build
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
-const path = require('path');
 const { CLIENT_ORIGIN } = require('./config');
-const cors = require('cors');
+// const cors = require('cors');
 const { logInfo, logError, logSuccess } = require('./auth/logger.js');
 const { PORT, DATABASE_URL, HTTP_STATUS_CODES } = require('./config');
 const { router: usersRouter } = require('./users');
@@ -22,12 +22,23 @@ app.use(morgan('[:date[web]] :method :url :status'));
 app.use(express.json());
 app.use(express.static('./public'));
 
-// CORS
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN
-  })
-);
+// Production CORS
+// app.use(
+//   cors({
+//     origin: CLIENT_ORIGIN
+//   })
+// );
+
+// Dev CORS
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
 
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
