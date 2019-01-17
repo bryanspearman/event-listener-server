@@ -126,10 +126,10 @@ router.put('/:id', jwtAuth, (request, response) => {
 
 // ### Delete ###
 router.delete('/:id', jwtAuth, (request, response) => {
-  logInfo('Deleting response document ...');
+  logInfo('Deleting event...');
   Item.findByIdAndRemove(request.params.id)
     .then(() => {
-      logSuccess('Deleted response document succesfully');
+      logSuccess('Deleted event succesfully');
       response.status(HTTP_STATUS_CODES.ACCEPTED).end();
     })
     .catch(err => {
