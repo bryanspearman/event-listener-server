@@ -4,7 +4,6 @@ const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 
 const { User } = require('../users/models');
 const { JWT_SECRET } = require('../config');
-console.log(JWT_SECRET);
 const localStrategy = new LocalStrategy(
   (username, password, passportVerify) => {
     let user;
