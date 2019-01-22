@@ -1,6 +1,6 @@
 'use strict';
 //Uncomment line 3 for production build
-// exports.CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:3000';
+exports.CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:3000';
 exports.PORT = process.env.PORT || 8080;
 
 exports.DATABASE_URL =
