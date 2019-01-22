@@ -1,6 +1,6 @@
 'use strict';
 //Comment out line 3 for production build
-// require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
