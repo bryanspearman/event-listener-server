@@ -5,7 +5,6 @@
   "version": "1.0.0",
   "repository": "https://github.com/bryanspearman/event-listener-server",
   "description": "Event Listener lets you count down to upcoming events or see how long its been since a past event.",
-  "main": "index.js",
   "engines": {
     "node": "11.1.0"
   },

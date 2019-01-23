@@ -55,7 +55,7 @@ app.get('/api/items', jwtAuth, (req, res) => {
 app.use('*', (req, res) => {
   res.status(HTTP_STATUS_CODES.NOT_FOUND).json({
     message:
-      'Wrong route. You should be here: https://event-listener-2019.herokuapp.com'
+      'Wrong route. You should be here: https://event-listener-client.herokuapp.com'
   });
 });
 
