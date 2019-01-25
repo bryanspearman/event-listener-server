@@ -44,52 +44,52 @@ describe('Testing auth api', function() {
   });
 
   describe('/api/auth/login', function() {
-    // it('Should reject requests with no credentials', async function() {
-    //   try {
-    //     const response = await chai.request(app).post('/api/auth/login');
-    //     expect(response, 'Request should not succeed');
-    //     expect(response).to.have.status(400);
-    //     expect(response.text).to.equal('Bad Request');
-    //   } catch (err) {
-    //     if (err instanceof chai.AssertionError) {
-    //       throw err;
-    //     }
-    //     const res = err.response;
-    //     expect(res).to.have.status(400);
-    //   }
-    // });
+    it('Should reject requests with no credentials', async function() {
+      try {
+        const response = await chai.request(app).post('/api/auth/login');
+        expect(response, 'Request should not succeed');
+        expect(response).to.have.status(400);
+        expect(response.text).to.equal('Bad Request');
+      } catch (err) {
+        if (err instanceof chai.AssertionError) {
+          throw err;
+        }
+        const res = err.response;
+        expect(res).to.have.status(400);
+      }
+    });
 
-    // it('Should reject requests with incorrect usernames', async function() {
-    //   try {
-    //     const response = await chai
-    //       .request(app)
-    //       .post('/api/auth/login')
-    //       .send({ username: 'wrongUsername', password });
-    //     return expect(response, 'Request should not succeed');
-    //   } catch (err) {
-    //     if (err instanceof chai.AssertionError) {
-    //       throw err;
-    //     }
-    //     const res = err.response;
-    //     expect(res).to.have.status(401);
-    //   }
-    // });
+    it('Should reject requests with incorrect usernames', async function() {
+      try {
+        const response = await chai
+          .request(app)
+          .post('/api/auth/login')
+          .send({ username: 'wrongUsername', password });
+        return expect(response, 'Request should not succeed');
+      } catch (err) {
+        if (err instanceof chai.AssertionError) {
+          throw err;
+        }
+        const res = err.response;
+        expect(res).to.have.status(401);
+      }
+    });
 
-    // it('Should reject requests with incorrect passwords', async function() {
-    //   try {
-    //     const response = await chai
-    //       .request(app)
-    //       .post('/api/auth/login')
-    //       .send({ username, password: 'wrongPassword' });
-    //     return expect(response, 'Request should not succeed');
-    //   } catch (err) {
-    //     if (err instanceof chai.AssertionError) {
-    //       throw err;
-    //     }
-    //     const res = err.response;
-    //     expect(res).to.have.status(401);
-    //   }
-    // });
+    it('Should reject requests with incorrect passwords', async function() {
+      try {
+        const response = await chai
+          .request(app)
+          .post('/api/auth/login')
+          .send({ username, password: 'wrongPassword' });
+        return expect(response, 'Request should not succeed');
+      } catch (err) {
+        if (err instanceof chai.AssertionError) {
+          throw err;
+        }
+        const res = err.response;
+        expect(res).to.have.status(401);
+      }
+    });
 
     it('Should return a valid auth token', async function() {
       const res = await chai

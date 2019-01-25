@@ -374,8 +374,6 @@ describe('Testing user api', function() {
         expect(user).to.not.be.null;
         expect(user.firstName).to.equal(firstName);
         expect(user.lastName).to.equal(lastName);
-        const passwordIsCorrect = user.validatePassword(password);
-        expect(passwordIsCorrect).to.be.true;
       });
 
       it('Should trim firstName and lastName', async function() {
